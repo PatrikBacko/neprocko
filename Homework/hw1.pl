@@ -16,6 +16,20 @@
 % logtwo(s(s(s(s(0)))), R).
 % R = s(s(0)).
 %
+
+% half(+N, ?vysledek)
+
+half(0, 0).
+half(s(0), 0).
+half(s(s(X)), s(R)) :- half(X, R).
+
+% logtwo(+N, ?Vysledek)
+
+
+logtwo(s(0),0).
+logtwo(X,s(R)) :- half(X,Z), logtwo(Z,R).
+
+
 % b) Implementujte predikát, který spočte n-té Fibonacciho číslo lépe než
 % v exponenciálním čase (ideálně pouze lineárně mnoho sčítání).
 %
