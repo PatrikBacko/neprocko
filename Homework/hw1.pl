@@ -21,12 +21,12 @@
 
 half(0, 0).
 half(s(0), 0).
-half(s(s(X)), s(R)) :- half(X, R).
+half(s(s(N)), s(R)) :- half(N, R).
 
 % logtwo(+N, ?Vysledek)
 
 logtwo(s(0),0).
-logtwo(X,s(R)) :- half(X,Z), less(Z,X), logtwo(Z,R).
+logtwo(N,s(R)) :- half(N,X), less(X,N), logtwo(X,R).
 
 
 % b) Implementujte predikát, který spočte n-té Fibonacciho číslo lépe než
@@ -44,8 +44,30 @@ logtwo(X,s(R)) :- half(X,Z), less(Z,X), logtwo(Z,R).
 %
 % generalizedFib(3, 4, 5, R).
 % R = 14.
-%
-%
+
+%generalizedFib(+N,+F0,+F1,?R)
+
+% generalizedFib(0,F0,F1,F0).
+% generalizedFib(s(0),F0,F1,F0).
+% generalizedFib(s(s(N)), F0, F1, R) :- generalizedFib(s(N), F0, F1, R1), generalizedFib(N, F0, F1, R2), add(R1,R2,R).
+
+
+
+%fib(+N, ?Vysledek)
+
+fib_1(s(0),s(0),0).
+fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
+fib(N,R) :- fib_1(N,R,_).
+
+%fib(s(s(N)),R) :- fib_1(s(N),R1,R2),add(R1,R2,R).
+
+% fib(0, 0).
+% fib(s(0), s(0)).
+% fib(s(s(N)), R) :- fib(s(N), R1), fib(N, R2), add(R1,R2,R).
+
+% toNat(10,X), fib(X,R), fromNat(R,A).
+% toNat(10,X), generalizedFib(X,0,s(0),R), fromNat(R,A).
+
 % c) (BONUSOVÁ ÚLOHA) Implementuje predikát pro sčítání dvou binárních čísel.
 %
 % Můžete použít např. následující reprezentaci:
