@@ -25,9 +25,8 @@ half(s(s(X)), s(R)) :- half(X, R).
 
 % logtwo(+N, ?Vysledek)
 
-
 logtwo(s(0),0).
-logtwo(X,s(R)) :- half(X,Z), logtwo(Z,R).
+logtwo(X,s(R)) :- half(X,Z), less(Z,X), logtwo(Z,R).
 
 
 % b) Implementujte predikát, který spočte n-té Fibonacciho číslo lépe než
