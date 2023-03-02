@@ -51,13 +51,33 @@ logtwo(N,s(R)) :- half(N,X), less(X,N), logtwo(X,R).
 % generalizedFib(s(0),F0,F1,F0).
 % generalizedFib(s(s(N)), F0, F1, R) :- generalizedFib(s(N), F0, F1, R1), generalizedFib(N, F0, F1, R2), add(R1,R2,R).
 
-
-
 %fib(+N, ?Vysledek)
 
-fib_1(s(0),s(0),0).
-fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
+% fib_1(s(0),s(0),0).
+% fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
+% fib(N,R) :- fib_1(N,R,_).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%successor aritmetika
+
+% fib_1(s(0),s(0),0).
+% fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
+% fib(N,R) :- fib_1(N,R,_).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%normálna aritmetika
+
+fib_1(1,1,0).
+fib_1(N,R,R1) :- N >= 1, N1 is N - 1, fib_1(N1,R1,R2), R is R1 + R2.
 fib(N,R) :- fib_1(N,R,_).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 %fib(s(s(N)),R) :- fib_1(s(N),R1,R2),add(R1,R2,R).
 
