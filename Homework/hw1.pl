@@ -2,20 +2,6 @@
 %
 % a) Implementujte logaritmus o základu 2 (dolní celou část) na unárně
 % reprezentovaných číslech.
-%
-% logtwo(+N, ?Vysledek)
-%
-% Nápověda: Může se vám hodit pomocný predikát pro půlení.
-%
-% logtwo(0, R).
-% false.
-%
-% logtwo(s(s(s(0))), R).
-% R = s(0).
-%
-% logtwo(s(s(s(s(0)))), R).
-% R = s(s(0)).
-%
 
 % half(+N, ?vysledek)
 
@@ -30,19 +16,6 @@ logtwo(N,s(R)) :- half(N,X), less(X,N), logtwo(X,R).
 
 % b) Implementujte predikát, který spočte n-té Fibonacciho číslo lépe než
 % v exponenciálním čase (ideálně pouze lineárně mnoho sčítání).
-%
-% fib(+N, ?Vysledek)
-%
-% Nápověda: Zkuste nejdřív implementovat obecnější predikát, kde si můžete
-% zvolit počáteční čísla.
-%
-% F_0 = 4
-% F_1 = 5
-% F_2 = 4 + 5 = 9
-% F_3 = 5 + 9 = 14
-%
-% generalizedFib(3, 4, 5, R).
-% R = 14.
 
 %Successor aritmetika
 %fibSuccessor(+N, ?Vysledek)
