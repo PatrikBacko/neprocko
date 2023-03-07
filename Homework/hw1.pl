@@ -28,7 +28,6 @@ half(s(s(N)), s(R)) :- half(N, R).
 logtwo(s(0),0).
 logtwo(N,s(R)) :- half(N,X), less(X,N), logtwo(X,R).
 
-
 % b) Implementujte predikát, který spočte n-té Fibonacciho číslo lépe než
 % v exponenciálním čase (ideálně pouze lineárně mnoho sčítání).
 %
@@ -45,48 +44,21 @@ logtwo(N,s(R)) :- half(N,X), less(X,N), logtwo(X,R).
 % generalizedFib(3, 4, 5, R).
 % R = 14.
 
-%generalizedFib(+N,+F0,+F1,?R)
+%Successor aritmetika
+%fibSuccessor(+N, ?Vysledek)
 
-% generalizedFib(0,F0,F1,F0).
-% generalizedFib(s(0),F0,F1,F0).
-% generalizedFib(s(s(N)), F0, F1, R) :- generalizedFib(s(N), F0, F1, R1), generalizedFib(N, F0, F1, R2), add(R1,R2,R).
+fibSuccessor_1(s(0),s(0),0).
+fibSuccessor_1(s(N),R,R1) :- fibSuccessor_1(N,R1,R2), add(R1,R2,R).
+fibSuccessor(0,0).
+fibSuccessor(N,R) :- fibSuccessor_1(N,R,_).
 
+%Normálna aritmetika
 %fib(+N, ?Vysledek)
-
-% fib_1(s(0),s(0),0).
-% fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
-% fib(N,R) :- fib_1(N,R,_).
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%successor aritmetika
-
-% fib_1(s(0),s(0),0).
-% fib_1(s(N),R,R1) :- fib_1(N,R1,R2), add(R1,R2,R).
-% fib(N,R) :- fib_1(N,R,_).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%normálna aritmetika
 
 fib_1(1,1,0).
 fib_1(N,R,R1) :- N >= 1, N1 is N - 1, fib_1(N1,R1,R2), R is R1 + R2.
+fib(0,0).
 fib(N,R) :- fib_1(N,R,_).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%fib(s(s(N)),R) :- fib_1(s(N),R1,R2),add(R1,R2,R).
-
-% fib(0, 0).
-% fib(s(0), s(0)).
-% fib(s(s(N)), R) :- fib(s(N), R1), fib(N, R2), add(R1,R2,R).
-
-% toNat(10,X), fib(X,R), fromNat(R,A).
-% toNat(10,X), generalizedFib(X,0,s(0),R), fromNat(R,A).
 
 % c) (BONUSOVÁ ÚLOHA) Implementuje predikát pro sčítání dvou binárních čísel.
 %
