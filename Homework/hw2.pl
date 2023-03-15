@@ -3,7 +3,17 @@
 % a) Implementujte predikát flat(+List, ?Result), který zploští libovolně
 % zanořený seznam seznamů List.
 %
-% flat([], R).
+
+flat([],A,A).
+
+
+
+% flat([X], R) :- flat(X, R), !.
+% flat([X|Y], R) :- flat([Y], R1), R= [X,R1].
+% flat(X, X).
+  
+
+% flat([], R) .
 % R = [].
 %
 % flat([[]], R).
