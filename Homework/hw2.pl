@@ -2,15 +2,13 @@
 %
 % a) Implementujte predikát flat(+List, ?Result), který zploští libovolně
 % zanořený seznam seznamů List.
-%
 
-flat([],A,A).
+%flat(+list, ?result)
 
-
-
-% flat([X], R) :- flat(X, R), !.
-% flat([X|Y], R) :- flat([Y], R1), R= [X,R1].
-% flat(X, X).
+flat([],A,A) :- !.
+flat([X|Y],A,R) :- flat(Y,A,R1), flat(X,R1,R), !.
+flat(X,A,[X|A]).
+flat(X,R) :- flat(X,[],R).
   
 
 % flat([], R) .
@@ -29,9 +27,22 @@ flat([],A,A).
 % neprodukuje duplikátní/nesprávné výsledky). Pokuste se o efektivní
 % implementaci pomocí akumulátoru.
 %
+
+
+
+
+
 % b) Implementuje predikát transp(+M, ?R), který transponuje matici M (uloženou
 % jako seznam seznamů). Pokud M není ve správném formátu (např. řádky mají
 % různé délky), dotaz transp(M, R) by měl selhat.
+
+
+%transp(+Matrix,?Result).
+
+
+
+
+
 %
 % transp([], R).
 % R = [].
