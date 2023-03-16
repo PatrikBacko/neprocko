@@ -5,12 +5,11 @@
 
 %flat(+list, ?result)
 
-flat([],A,A) :- !.
-flat([X|Y],A,R) :- flat(Y,A,R1), flat(X,R1,R), !.
-flat(X,A,[X|A]).
-flat(X,R) :- flat(X,[],R).
+flat_([],A,A) :- !.
+flat_([X|Y],A,R) :- flat_(Y,A,R1), flat_(X,R1,R), !.
+flat_(X,A,[X|A]).
+flat(X,R) :- flat_(X,[],R).
   
-
 % flat([], R) .
 % R = [].
 %
@@ -26,24 +25,31 @@ flat(X,R) :- flat(X,[],R).
 % Tento predikát měl být deterministický (speciálně otestujte, že po odmítnutí
 % neprodukuje duplikátní/nesprávné výsledky). Pokuste se o efektivní
 % implementaci pomocí akumulátoru.
-%
-
-
-
 
 
 % b) Implementuje predikát transp(+M, ?R), který transponuje matici M (uloženou
 % jako seznam seznamů). Pokud M není ve správném formátu (např. řádky mají
 % různé délky), dotaz transp(M, R) by měl selhat.
 
+%rev(+List, ?Result). Reversing of a list 
 
-%transp(+Matrix,?Result).
+rev(XS, R) :- rev_(XS, [], R).
 
+rev_([], A, A).
+rev_([X|XS], A, R) :-
+  rev_(XS, [X|A], R).
 
+%transp(+Matrix,?Result). - Transposing of Matrix
 
+transp_1([],A,A).
+transp_1([X|Y],_,R) :- transp_1(Y,[],R1), rev(R1,R2), transp_2(X,R2,[],R), !.
 
+transp_2([],[],A,A).
+transp_2([X|XS],[Y|YS],A ,R ) :- transp_2(XS, YS, [[X|Y]|A],R), !.
+transp_2([X|XS], [] ,A ,R ) :- transp_2(XS,[],[[X]|A],R), !.
 
-%
+transp(M,R) :- transp_1(M,[],R1), rev(R1,R).
+
 % transp([], R).
 % R = [].
 %
