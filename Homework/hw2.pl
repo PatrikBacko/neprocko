@@ -42,7 +42,7 @@ rev_([X|XS], A, R) :-
 %transp(+Matrix,?Result). - Transposing of Matrix
 
 transp_1([],A,A).
-transp_1([X|Y],_,R) :- transp_1(Y,[],R1), rev(R1,R2), transp_2(X,R2,[],R), !.
+transp_1([X|Y],_,R) :- transp_1(Y,[],R1), rev(R1,R2), transp_2(X,R2,[],R).
 
 transp_2([],[],A,A).
 transp_2([X|XS],[Y|YS],A ,R ) :- transp_2(XS, YS, [[X|Y]|A],R), !.
