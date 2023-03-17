@@ -31,7 +31,7 @@ flat(X,R) :- flat_(X,[],R).
 % jako seznam seznamů). Pokud M není ve správném formátu (např. řádky mají
 % různé délky), dotaz transp(M, R) by měl selhat.
 
-%rev(+List, ?Result). Reversing of a list 
+%rev(+List, ?Result). Reversing a list 
 
 rev(XS, R) :- rev_(XS, [], R).
 
@@ -39,15 +39,20 @@ rev_([], A, A).
 rev_([X|XS], A, R) :-
   rev_(XS, [X|A], R).
 
-%transp(+Matrix,?Result). - Transposing of Matrix
+%takes last row of length m, and creates m columns of lenght 1
+transp_3([],[],A,A).
+transp_3([X|XS], [] ,A ,R ) :- transp_3(XS,[],[[X]|A],R), !.
 
-transp_1([],A,A).
+%takes row of legth m, and every element adds to one column of matrix with m colums
+transp_2([],[],A,A).  
+transp_2([X|XS],[Y|YS],A ,R ) :- transp_2(XS, YS, [[X|Y]|A],R), !.
+
+%splits matrix to rows, and calls tranps_3 to last row, and tranps_2 to
+%other rows and matrix made by previous rows.
+transp_1([X|[]],_,R) :- transp_3(X,[],[],R), !.
 transp_1([X|Y],_,R) :- transp_1(Y,[],R1), rev(R1,R2), transp_2(X,R2,[],R).
 
-transp_2([],[],A,A).
-transp_2([X|XS],[Y|YS],A ,R ) :- transp_2(XS, YS, [[X|Y]|A],R), !.
-transp_2([X|XS], [] ,A ,R ) :- transp_2(XS,[],[[X]|A],R), !.
-
+%transp(+Matrix,?Result). - Transposing Matrix (defined by lists)
 transp(M,R) :- transp_1(M,[],R1), rev(R1,R).
 
 % transp([], R).
