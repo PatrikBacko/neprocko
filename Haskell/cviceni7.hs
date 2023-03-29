@@ -157,3 +157,6 @@ absPlus x y = (if x < 0 then -x else x) + y
 -- Kartézský součin
 
 times xs ys = [(x, y) | x <- xs, y <- ys]
+
+-- Na procvičení: hledání pythagorejských trojic, klouzavý průměr,
+-- nejbližší vyšší mocnina dvojky (pomocí seznamů), hledání výskytu v řetěci
