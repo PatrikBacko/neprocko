@@ -16,7 +16,7 @@
 -- 1 < 2 :: Bool
 --
 -- > :t ("abc", True)
--- ("abc", True) :: ([Char], Bool)
+-- ("abc", True) :: ([Char], Bool)x 
 --
 --
 -- Funkce mají také typ
@@ -267,3 +267,7 @@ check' g = "g 0 gives " ++ msg (g 0)
   where
     msg []    = "empty list"
     msg (_:_) = "non-empty list"
+
+
+-- Příklady na procvičení: mocnění funkcí, součet, součin, mocnina pomocí mocnění funkcí, ***Done*** 
+-- všechna rozdělení množiny na dvě podmnožiny
