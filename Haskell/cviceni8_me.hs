@@ -14,6 +14,4 @@ power x y = pow y (mull x) 1
 
 partitions :: [a] -> [([a],[a])]
 
-
-
 substring :: String -> String -> String
