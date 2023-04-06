@@ -12,6 +12,6 @@ mull x y = pow x (add y) 0
 power :: Int -> Int -> Int
 power x y = pow y (mull x) 1
 
-partitions :: [a] -> [([a],[a])]
+-- partitions :: [a] -> [([a],[a])]
 
-substring :: String -> String -> String
+-- substring :: String -> String -> String
