@@ -12,15 +12,21 @@ rleEncode = undefined
 -- "hello"
 --
 rleDecode :: [(Int, a)] -> [a]
-rleDecode = undefined
+rleDecode [(n, x), xs] = replicate n x ++ rleDecode xs
 
 -- 2) Definujte nekonečný seznam všech prvočísel. Pokuste se o efektivní řešení.
 
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 --
+isPrime :: Integer -> Integer -> Bool
+isPrime n 0 = True
+isPrime n k = (k < n) & (not ((n mod k) == 0)) & (isPrime n (k-1))
+
+
+
 primes :: [Integer]
-primes = undefined
+primes = [x | x <- [2..], isPrime x]
 
 -- 3) Implementujte mergesort.
 
