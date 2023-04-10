@@ -162,9 +162,3 @@ times xs ys = [(x, y) | x <- xs, y <- ys]
 
 -- Na procvičení: hledání pythagorejských trojic, klouzavý průměr,
 -- nejbližší vyšší mocnina dvojky (pomocí seznamů), hledání výskytu v řetěci
-
--- Na procvičení: hledání pythagorejských trojic, klouzavý průměr,
--- nejbližší vyšší mocnina dvojky (pomocí seznamů), hledání výskytu v řetěci
-
--- Na procvičení: hledání pythagorejských trojic, klouzavý průměr,
--- nejbližší vyšší mocnina dvojky (pomocí seznamů), hledání výskytu v řetěci

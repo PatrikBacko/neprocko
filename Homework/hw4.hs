@@ -31,16 +31,26 @@ rleDecode ((n, x):xs)
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 
---sieve (x:xs) = x : sieve[y| y <- xs, y `mod` x /= 0]
+
 
 -- primes :: [Integer]
 -- primes = sieve [2..]
+--     where sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
+
 
 -- >>> gap 1000
 -- (887, 907)
---
-gap :: Integer -> (Integer, Integer)
+
+gap :: Int -> (Integer, Integer)
 gap = undefined
+
+gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
+gap' [] max res = res
+gap' [x] max res = res
+gap' [x:y:xs] max res
+    | (y - x) > max = gap' (y:xs) (y - x) (x,y)
+    | otherwise = gap' (y:xs) max res
+-- gap n = gap' (take n primes) (0,0)
 
 -- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
 -- že konec bude alespoň 3.
@@ -48,6 +58,7 @@ gap = undefined
 -- 3) Implementujte mergesort, který vyhazuje duplikáty.
 
 mergeWith :: (a -> a -> Ordering) -> [a] -> [a] -> [a]
+mergeWith _ [] [] = []
 mergeWith _ xs [] = xs
 mergeWith _ [] ys = ys
 mergeWith c (x:xs) (y:ys)
@@ -56,9 +67,10 @@ mergeWith c (x:xs) (y:ys)
     | c x y == EQ = x : mergeWith c xs ys
 
 sortWith  :: (a -> a -> Ordering) -> [a] -> [a]
-sortWith c [] = []
-sortWith c xs = mergeWith c (sortWith c []) ()
-
+sortWith _ [] = []
+sortWith _ [x] = [x]
+sortWith c xs = mergeWith c (sortWith c left) (sortWith c right)
+    where (left, right) = splitAt (length xs `div` 2) xs
 
 -- Prvním argumentem je funkce, která provádí porovnávání.
 -- Ordering je datový typ, který obsahuje 3 konstanty: LT, EQ, GT
