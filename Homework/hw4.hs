@@ -4,37 +4,48 @@
 
 -- >>> rleEncode "hello"
 -- [(1,'h'),(1,'e'),(2,'l'),(1,'o')]
---
+
+rleEncode' :: (Eq a) => Int -> a -> [a] -> [(Int, a)]
+rleEncode' count prev [] = [(count, prev)]
+rleEncode' count prev (x:xs)
+    | x == prev = rleEncode' (count + 1) prev xs
+    | otherwise = (count, prev) : rleEncode' 1 x xs
+
 rleEncode :: (Eq a) => [a] -> [(Int, a)]
-rleEncode = undefined
+rleEncode (x:xs) = rleEncode' 1 x xs
 
 -- >>> rleDecode [(1,'h'),(1,'e'),(2,'l'),(1,'o')]
 -- "hello"
---
+
 rleDecode :: [(Int, a)] -> [a]
-rleDecode [(n, x), xs] = replicate n x ++ rleDecode xs
+rleDecode [] = []
+-- rleDecode ((n, x):xs) = replicate n x ++ rleDecode xs
+rleDecode ((n, x):xs) 
+    | n > 0 = x : rleDecode ((n-1, x):xs)
+    | otherwise = rleDecode xs
 
 -- 2) Definujte nekonečný seznam všech prvočísel. Pokuste se o efektivní řešení.
 
 -- >>> take 5 primes
 -- [2,3,5,7,11]
---
-isPrime :: Integer -> Integer -> Bool
-isPrime n 0 = True
-isPrime n k = (k < n) & (not ((n mod k) == 0)) & (isPrime n (k-1))
 
-
+--sieve (x:xs) = x : sieve[y| y <- xs, y `mod` x /= 0]
 
 primes :: [Integer]
-primes = [x | x <- [2..], isPrime x]
+primes = sieve [2..]
 
 -- 3) Implementujte mergesort.
 
+
 mergeWith :: (a -> a -> Bool) -> [a] -> [a] -> [a]
-mergeWith = undefined
+mergeWith _ xs [] = xs
+mergeWith _ [] ys = ys
+mergeWith comparer (x:xs) (y:ys)
+    | x comparer y = y : mergeWith comparer (x:xs) ys
+    | otherwise = x : mergeWith comparer xs (y:ys)
 
 sortWith  :: (a -> a -> Bool) -> [a] -> [a]
-sortWith = undefined
+sortWith x = 
 
 -- Prvním argumentem je funkce, která provádí porovnávání.
 --
