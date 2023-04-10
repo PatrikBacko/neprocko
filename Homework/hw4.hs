@@ -31,21 +31,21 @@ rleDecode ((n, x):xs)
 
 --sieve (x:xs) = x : sieve[y| y <- xs, y `mod` x /= 0]
 
-primes :: [Integer]
-primes = sieve [2..]
+-- primes :: [Integer]
+-- primes = sieve [2..]
 
 -- 3) Implementujte mergesort.
 
 
-mergeWith :: (a -> a -> Bool) -> [a] -> [a] -> [a]
-mergeWith _ xs [] = xs
-mergeWith _ [] ys = ys
-mergeWith comparer (x:xs) (y:ys)
-    | x comparer y = y : mergeWith comparer (x:xs) ys
-    | otherwise = x : mergeWith comparer xs (y:ys)
+-- mergeWith :: (a -> a -> Bool) -> [a] -> [a] -> [a]
+-- mergeWith _ xs [] = xs
+-- mergeWith _ [] ys = ys
+-- mergeWith comparer (x:xs) (y:ys)
+--     | x comparer y = y : mergeWith comparer (x:xs) ys
+--     | otherwise = x : mergeWith comparer xs (y:ys)
 
-sortWith  :: (a -> a -> Bool) -> [a] -> [a]
-sortWith x = 
+-- sortWith  :: (a -> a -> Bool) -> [a] -> [a]
+-- sortWith c x = sortWith c ([]) : sortWith c ()
 
 -- Prvním argumentem je funkce, která provádí porovnávání.
 --
