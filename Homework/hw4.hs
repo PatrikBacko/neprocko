@@ -25,6 +25,8 @@ rleDecode ((n, x):xs)
     | otherwise = rleDecode xs
 
 -- 2) Definujte nekonečný seznam všech prvočísel. Pokuste se o efektivní řešení.
+-- Poté pomocí něj definujte funkci, která v daném rozsahu najde dvojici po sobě
+-- jdoudích prvočísel s maximálním rozdílem. Pokud je jich více, vrátí první z nich.
 
 -- >>> take 5 primes
 -- [2,3,5,7,11]
@@ -34,26 +36,42 @@ rleDecode ((n, x):xs)
 -- primes :: [Integer]
 -- primes = sieve [2..]
 
--- 3) Implementujte mergesort.
+-- >>> gap 1000
+-- (887, 907)
+--
+gap :: Integer -> (Integer, Integer)
+gap = undefined
 
+-- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
+-- že konec bude alespoň 3.
 
--- mergeWith :: (a -> a -> Bool) -> [a] -> [a] -> [a]
--- mergeWith _ xs [] = xs
--- mergeWith _ [] ys = ys
--- mergeWith comparer (x:xs) (y:ys)
---     | x comparer y = y : mergeWith comparer (x:xs) ys
---     | otherwise = x : mergeWith comparer xs (y:ys)
+-- 3) Implementujte mergesort, který vyhazuje duplikáty.
 
--- sortWith  :: (a -> a -> Bool) -> [a] -> [a]
--- sortWith c x = sortWith c ([]) : sortWith c ()
+mergeWith :: (a -> a -> Ordering) -> [a] -> [a] -> [a]
+mergeWith _ xs [] = xs
+mergeWith _ [] ys = ys
+mergeWith c (x:xs) (y:ys)
+    | c x y == LT = x : mergeWith c xs (y:ys)
+    | c x y == GT = y : mergeWith c (x:xs) ys
+    | c x y == EQ = x : mergeWith c xs ys
+
+sortWith  :: (a -> a -> Ordering) -> [a] -> [a]
+sortWith c [] = []
+sortWith c xs = mergeWith c (sortWith c []) ()
+
 
 -- Prvním argumentem je funkce, která provádí porovnávání.
+-- Ordering je datový typ, který obsahuje 3 konstanty: LT, EQ, GT
+-- (less than, equal, greater than).
 --
--- >>> sortWith (<) [10,9..1]
+-- >>> sortWith compare [10,9..1]
 -- [1,2,3,4,5,6,7,8,9,10]
 --
--- >>> sortWith (>) [10,9..1]
+-- >>> sortWith (flip compare) [10,9..1]
 -- [10,9,8,7,6,5,4,3,2,1]
+--
+-- >>> sortWith compare [1,1,1]
+-- [1]
 --
 -- BONUS)
 --

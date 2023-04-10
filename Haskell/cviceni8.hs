@@ -271,3 +271,4 @@ check' g = "g 0 gives " ++ msg (g 0)
 
 -- Příklady na procvičení: mocnění funkcí, součet, součin, mocnina pomocí mocnění funkcí, ***Done*** 
 -- všechna rozdělení množiny na dvě podmnožiny
+
