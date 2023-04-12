@@ -31,26 +31,35 @@ rleDecode ((n, x):xs)
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 
+isPrime :: Integer -> Bool
+isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
 
+sieve :: [Integer] -> [Integer]
+sieve [] = []
+sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
+
+primes :: [Integer]
+-- primes = [x| x <- [2..], isPrime x]
+primes = 2 : 3 : sieve [5,7..]
 
 -- primes :: [Integer]
--- primes = sieve [2..]
---     where sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
-
-
+-- primes = 2: 3: sieve (tail primes) [5,7..]
+--  where 
+--   sieve (p:ps) xs = h ++ sieve ps [x | x <- t, x `rem` p /= 0]
+--                   where (h,~(_:t)) = span (< p*p) xs
 -- >>> gap 1000
 -- (887, 907)
-
-gap :: Int -> (Integer, Integer)
-gap = undefined
 
 gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
 gap' [] max res = res
 gap' [x] max res = res
-gap' [x:y:xs] max res
+gap' (x:y:xs) max res
     | (y - x) > max = gap' (y:xs) (y - x) (x,y)
     | otherwise = gap' (y:xs) max res
--- gap n = gap' (take n primes) (0,0)
+
+gap :: Int -> (Integer, Integer)
+gap n = gap' [y | y <- take n primes, y < toInteger n] 0 (0,0)
+
 
 -- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
 -- že konec bude alespoň 3.
