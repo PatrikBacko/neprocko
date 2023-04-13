@@ -50,15 +50,15 @@ isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
 -- >>> gap 1000
 -- (887, 907)
 
-gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
-gap' [] max res = res
-gap' [x] max res = res
-gap' (x:y:xs) max res
-    | (y - x) > max = gap' (y:xs) (y - x) (x,y)
-    | otherwise = gap' (y:xs) max res
+-- gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
+-- gap' [] max res = res
+-- gap' [x] max res = res
+-- gap' (x:y:xs) max res
+--     | (y - x) > max = gap' (y:xs) (y - x) (x,y)
+--     | otherwise = gap' (y:xs) max res
 
-gap :: Int -> (Integer, Integer)
-gap n = gap' [y | y <- take n primes, y < toInteger n] 0 (0,0)
+-- gap :: Int -> (Integer, Integer)
+-- gap n = gap' [y | y <- take n primes, y < toInteger n] 0 (0,0)
 
 
 -- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
@@ -104,8 +104,12 @@ sortWith c xs = mergeWith c (sortWith c left) (sortWith c right)
 -- >>> combinations 2 "abcd"
 -- ["ab","ac","ad","bc","bd","cd"]
 --
+
 combinations :: Int -> [a] -> [[a]]
-combinations = undefined
+combinations 0 _ = [[]]
+combinations _ [] = []
+combinations n (x:xs) = [x:c | c <- combinations (n-1) xs] ++ combinations n xs
+
 
 -- permutations x vygeneruje seznam všech permutací. Na pořadí permutací ve
 -- výsledném seznamu nezáleží.
@@ -113,6 +117,7 @@ combinations = undefined
 -- >>> permutations "abc"
 -- ["abc","bac","bca","acb","cab","cba"]
 --
+
 permutations :: [a] -> [[a]]
 permutations = undefined
 
