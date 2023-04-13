@@ -34,13 +34,13 @@ rleDecode ((n, x):xs)
 isPrime :: Integer -> Bool
 isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
 
-sieve :: [Integer] -> [Integer]
-sieve [] = []
-sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
+-- sieve :: [Integer] -> [Integer]
+-- sieve [] = []
+-- sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
 
-primes :: [Integer]
--- primes = [x| x <- [2..], isPrime x]
-primes = 2 : 3 : sieve [5,7..]
+-- primes :: [Integer]
+-- -- primes = [x| x <- [2..], isPrime x]
+-- primes = 2 : 3 : sieve [5,7..]
 
 -- primes :: [Integer]
 -- primes = 2: 3: sieve (tail primes) [5,7..]
