@@ -31,40 +31,25 @@ rleDecode ((n, x):xs)
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 
--- %%%%%% FINAL PRIMES %%%%%%
+sieve :: [Integer] -> [Integer]
+sieve [] = []
+sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
 
--- sieve :: [Integer] -> [Integer]
--- sieve [] = []
--- sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
+primes :: [Integer]
+primes = sieve [2..]
 
--- primes :: [Integer]
--- primes = sieve [2..]
-
--- %%%%%% FINAL PRIMES %%%%%%
-
-
--- primes :: [Integer]
--- primes = [x| x <- [2..], isPrime x]
---     where isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
-
-
--- primes :: [Integer]
--- primes = 2: 3: sieve (tail primes) [5,7..]
---  where 
---   sieve (p:ps) xs = h ++ sieve ps [x | x <- t, x `rem` p /= 0]
---                   where (h,~(_:t)) = span (< p*p) xs
 -- >>> gap 1000
 -- (887, 907)
 
--- gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
--- gap' [] max max_pair = max_pair
--- gap' [x] max max_pair = max_pair
--- gap' (x:y:xs) max max_pair
---     | (y - x) > max = gap' (y:xs) (y - x) (x,y)
---     | otherwise = gap' (y:xs) max max_pair
+gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
+gap' [] max max_pair = max_pair
+gap' [x] max max_pair = max_pair
+gap' (x:y:xs) max max_pair
+    | (y - x) > max = gap' (y:xs) (y - x) (x,y)
+    | otherwise = gap' (y:xs) max max_pair
 
--- gap :: Int -> (Integer, Integer)
--- gap n = gap' [y | y <- take n primes, y <= toInteger n] (-1) (-1,-1)
+gap :: Integer -> (Integer, Integer)
+gap n = gap' (takeWhile (<= n) primes) (-1) (-1,-1)
 
 -- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
 -- že konec bude alespoň 3.
@@ -136,5 +121,6 @@ permutations (x:xs) = concat [insert x p | p <- permutations xs]
 -- >>> variations 2 "abc"
 -- ["ab","ba","ac","ca","bc","cb"]
 --
+
 variations :: Int -> [a] -> [[a]]
 variations n xs = concat [permutations c| c <- combinations n xs]
