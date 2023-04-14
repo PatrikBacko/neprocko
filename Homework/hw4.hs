@@ -31,16 +31,22 @@ rleDecode ((n, x):xs)
 -- >>> take 5 primes
 -- [2,3,5,7,11]
 
-isPrime :: Integer -> Bool
-isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
+-- %%%%%% FINAL PRIMES %%%%%%
 
 -- sieve :: [Integer] -> [Integer]
 -- sieve [] = []
 -- sieve (x:xs) = x : sieve [y| y <- xs, y `mod` x /= 0]
 
 -- primes :: [Integer]
--- -- primes = [x| x <- [2..], isPrime x]
--- primes = 2 : 3 : sieve [5,7..]
+-- primes = sieve [2..]
+
+-- %%%%%% FINAL PRIMES %%%%%%
+
+
+-- primes :: [Integer]
+-- primes = [x| x <- [2..], isPrime x]
+--     where isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
+
 
 -- primes :: [Integer]
 -- primes = 2: 3: sieve (tail primes) [5,7..]
@@ -51,15 +57,14 @@ isPrime n = all (\x -> n `mod` x /= 0) [2..(n-1)]
 -- (887, 907)
 
 -- gap' :: [Integer] -> Integer -> (Integer, Integer) -> (Integer, Integer)
--- gap' [] max res = res
--- gap' [x] max res = res
--- gap' (x:y:xs) max res
+-- gap' [] max max_pair = max_pair
+-- gap' [x] max max_pair = max_pair
+-- gap' (x:y:xs) max max_pair
 --     | (y - x) > max = gap' (y:xs) (y - x) (x,y)
---     | otherwise = gap' (y:xs) max res
+--     | otherwise = gap' (y:xs) max max_pair
 
 -- gap :: Int -> (Integer, Integer)
--- gap n = gap' [y | y <- take n primes, y < toInteger n] 0 (0,0)
-
+-- gap n = gap' [y | y <- take n primes, y <= toInteger n] (-1) (-1,-1)
 
 -- Prvním argumentem je konec rozsahu, začátek bude vždy 2. Můžete předpokládat,
 -- že konec bude alespoň 3.
@@ -110,7 +115,6 @@ combinations 0 _ = [[]]
 combinations _ [] = []
 combinations n (x:xs) = [x:c | c <- combinations (n-1) xs] ++ combinations n xs
 
-
 -- permutations x vygeneruje seznam všech permutací. Na pořadí permutací ve
 -- výsledném seznamu nezáleží.
 --
@@ -118,8 +122,13 @@ combinations n (x:xs) = [x:c | c <- combinations (n-1) xs] ++ combinations n xs
 -- ["abc","bac","bca","acb","cab","cba"]
 --
 
+insert :: a -> [a] -> [[a]]
+insert y [] = [[y]]
+insert y (x:xs) = (y:x:xs) : [x:r| r <- insert y xs]
+
 permutations :: [a] -> [[a]]
-permutations = undefined
+permutations [] = [[]]
+permutations (x:xs) = concat [insert x p | p <- permutations xs]
 
 -- Pomocí těchto funkcí definujte "variace" (občas najdete v české literatuře,
 -- v angličtině pro to termín asi neexistuje): kombinace, kde záleží na pořadí
@@ -128,4 +137,4 @@ permutations = undefined
 -- ["ab","ba","ac","ca","bc","cb"]
 --
 variations :: Int -> [a] -> [[a]]
-variations = undefined
+variations n xs = concat [permutations c| c <- combinations n xs]
