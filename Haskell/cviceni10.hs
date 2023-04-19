@@ -86,15 +86,37 @@ insert x (IntNode y l r)
 -- Pokud definujeme strom takovýmto způsobem, budeme potřebovat kopii pro
 -- každý datový typ. Řešení: datový typ parametrizujeme typovou proměnnou.
 
-data Tree a = Leaf | Node a (Tree a) (Tree a)
+data Tree a = Nill | Node a (Tree a) (Tree a)
     deriving (Show, Eq)
 
 insert' :: (Ord a) => a -> Tree a -> Tree a
-insert' x Leaf = Node x Leaf Leaf
+insert' x Nill = Node x Nill Nill
 insert' x (Node y l r)
     | x <  y    = Node y (insert' x l) r
     | x == y    = Node x l r
     | otherwise = Node y l (insert' x r)
+
+findMax :: (Ord a) => Tree a -> Maybe a
+findMax Nill = Nothing
+findMax (Node x _ Nill) = Just x
+findMax (Node x _ r) = findMax r
+
+-- successor :: (Ord a) => a -> Tree a -> Maybe a
+-- successor x Nill = Nothing
+-- successor x (Node y l r) = case compare x y of
+--     LT -> 
+--     EQ ->
+--     GT ->
+
+-- delete' :: (Ord a) => a -> Tree a 
+
+-- delete :: (Ord a) => a -> Tree a -> Tree a
+-- delete x Nill = Nill
+-- delete x (Node y l r) = case compare x y of
+--     LT -> Node y (delete x l) r
+--     EQ -> delete' (Node y l r)
+--     GT -> Node y l (delete x r)
+
 
 -- Původní IntTree je tedy Tree Int (podobně jako [Int]).
 --
