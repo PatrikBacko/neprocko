@@ -48,6 +48,10 @@ gap' (x:y:xs) max max_pair
     | (y - x) > max = gap' (y:xs) (y - x) (x,y)
     | otherwise = gap' (y:xs) max max_pair
 
+--
+-- >>> rleEncode (map gap [3 .. 1000])
+-- [(2,(2,3)),(6,(3,5)),(18,(7,11)),(68,(23,29)),(30,(89,97)),(414,(113,127)),(366,(523,541)),(94,(887,907))]
+--
 gap :: Integer -> (Integer, Integer)
 gap n = gap' (takeWhile (<= n) primes) (-1) (-1,-1)
 
