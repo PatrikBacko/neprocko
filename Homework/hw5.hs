@@ -1,34 +1,16 @@
+import Data.Maybe (isNothing)
 -- 5. úloha
 --
 -- 1) Definujte datový typ 'Trie k v' reprezentující trii, kde klíče (řetězce)
 -- jsou typu '[k]' a hodnoty typu 'v'.
 
-------------------------------------------------------------------------------------------------
-
--- data Trie k v = Trie {value :: Maybe v, children :: [(k, Trie k v)]}
---     deriving (Show, Eq)
-
-
--- data Trie k v = Node (Maybe v) [(k, Trie k v)]
---     deriving (Show, Eq) -- ??? nvm xD
-
 data Trie k v = ValueNode v [(k, Trie k v)] | Node [(k, Trie k v)]
     deriving (Show, Eq)
 
-------------------------------------------------------------------------------------------------
-
 -- Implementujte následující:
-
-------------------------------------------------------------------------------------------------
-
--- empty :: Trie k v
--- empty = Node Nothing []
 
 empty :: Trie k v
 empty = Node []
-
-------------------------------------------------------------------------------------------------
-
 
 -- 'empty' je jednoduše konstanta, reprezentující prádznou trii.
 --
@@ -47,7 +29,7 @@ singleton (x:xs) value = Node [(x, singleton xs value)]
 
 insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
 insertWith f [] new (Node children) = ValueNode new children
-insertWith f [] new (ValueNode old children) = ValueNode (f old new) children
+insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
 insertWith f (k:ks) new (Node children)
     |checkChild k children = Node (split f (k:ks) new children)
@@ -57,13 +39,13 @@ insertWith f (k:ks) new (ValueNode old children)
     |checkChild k children = ValueNode old (split f (k:ks) new children)
     |otherwise = ValueNode old ((k, insertWith f ks new (Node [])):children)
 
-checkChild :: Eq t => t -> [(t, b)] -> Bool
+checkChild :: (Eq k) => k -> [(k, Trie k v)] -> Bool
 checkChild _ [] = False
 checkChild k ((key, _):children)
     | k == key = True
     | otherwise = checkChild k children
 
-split :: Ord a => (t -> t -> t) -> [a] -> t -> [(a, Trie a t)] -> [(a, Trie a t)]
+split :: (Ord k) => (v -> v -> v) -> [k] -> v -> [(k, Trie k v)] -> [(k, Trie k v)]
 split f (k:ks) new [(key, ValueNode old children)]
     |k == key = [(key, insertWith f ks new (ValueNode old children))]
     |otherwise = [(key, ValueNode old children)]
@@ -71,15 +53,6 @@ split f (k:ks) new [(key, Node children)]
     |k == key = [(key, insertWith f ks new (Node children))]
     |otherwise = [(key, Node children)]
 split f ks new (child:children) = split f ks new [child] ++ split f ks new children
-
-
--- insertWith f ks new (ValueNode old children) = ValueNode old (split f new ks children children)
-
--- insertWith f k:ks new (Node _ []) = insertWith f 
-
--- insertWith f k:ks new (Node _ ((key,node):cs))
---     | key == k = insertWith f ks new node
---     | otherwise insertWith f ks new cs 
 
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
@@ -101,8 +74,17 @@ insert = insertWith f
 -- > insert "a" "x" (fromList [("a","y")]) == fromList [("a","x")]
 --
 
+find' :: (Ord k) => [k] -> [(k, Trie k v)] -> Maybe v
+find' _ [] = Nothing 
+find' (k:ks) ((key, node):children)
+    | k == key = find ks node
+    | otherwise = find' (k:ks) children
+
 find :: (Ord k) => [k] -> Trie k v -> Maybe v
-find = undefined
+find [] (Node _) = Nothing
+find [] (ValueNode value _) = Just value
+find (k:ks) (Node children) = find' (k:ks) children
+find (k:ks) (ValueNode _ children) = find' (k:ks) children
 
 -- 'find k t' vrátí hodnotu odpovídající klíči 'k' (jako 'Just v'), pokud
 -- existuje, jinak 'Nothing'.
@@ -112,7 +94,9 @@ find = undefined
 --
 
 member :: (Ord k) => [k] -> Trie k v -> Bool
-member = undefined
+member k t
+    | isNothing(find k t) = False
+    | otherwise = True
 
 -- 'member k t' zjistí, jestli se klíč 'k' nalézá v trii 't'.
 --
