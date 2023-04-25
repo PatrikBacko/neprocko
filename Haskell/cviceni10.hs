@@ -51,10 +51,10 @@ leq _             _             = False
 --
 -- data Point = Point Double Double
 --   deriving (Show, Eq)  -- Ord nedává smysl
---
+
 -- getX :: Point -> Double
 -- getX (Point x _) = x
---
+
 -- getY :: Point -> Double
 -- getY (Point _ y) = y
 --
