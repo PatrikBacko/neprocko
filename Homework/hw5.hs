@@ -43,6 +43,12 @@ processChildren k ((key, node):children) acc
     | k == key = (key, node):(children ++ acc)
     | otherwise = processChildren k children ((key, node):acc)
 
+
+-- processChild :: Ord k => (v -> v -> v) -> [k] -> v -> (k, Trie k v) -> Trie k v
+-- processChild f (k:ks) new (key, node)
+--     | k == key = insertWith f ks new node
+--     | otherwise = node
+
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
 -- hodnotou 'f new old'.
