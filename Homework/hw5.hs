@@ -33,7 +33,7 @@ insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
 insertWith f (k:ks) new (Node children) = Node ((key, insertWith f ks new child):other)
     where   ((key, child):other) = processChildren k children []
-    
+
 insertWith f (k:ks) new (ValueNode old children) = ValueNode old ((key, insertWith f ks new child):other)
     where   ((key, child):other) = processChildren k children []
 
@@ -100,7 +100,15 @@ fromList = undefined
 -- BONUS) Implementujte funkci
 
 delete :: (Ord k) => [k] -> Trie k v -> Trie k v
-delete = undefined
+delete ks t
+    | member ks t = delete' ks t
+    | otherwise = t
+
+delete' :: (Ord k) => [k] -> Trie k v -> Trie k v
+delete' ks t = undefined
+
+wasDeleted :: (Ord k) => [k] -> Trie k v -> bool 
+wasDeleted = undefined
 
 -- 'delete ks t' smaže klíč 'ks' (a odpovídající hodnotu) z trie 't', pokud
 -- klíč 'ks' není v trii obsažený, 'delete' vrátí původní trii.
