@@ -33,6 +33,7 @@ insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
 insertWith f (k:ks) new (Node children) = Node ((key, insertWith f ks new child):other)
     where   ((key, child):other) = processChildren k children []
+    
 insertWith f (k:ks) new (ValueNode old children) = ValueNode old ((key, insertWith f ks new child):other)
     where   ((key, child):other) = processChildren k children []
 
