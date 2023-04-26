@@ -31,21 +31,16 @@ insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
 insertWith f [] new (Node children) = ValueNode new children
 insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
-insertWith f (k:ks) new (Node children) = Node new_children
-    where   new_children = (key, insertWith f ks new child):other
-            ((key, child):other) = processChildren k children []
-
-insertWith f (k:ks) new (ValueNode old children) = ValueNode old new_children
-    where   new_children = (key, insertWith f ks new child):other
-            ((key, child):other) = processChildren k children []
+insertWith f (k:ks) new (Node children) = Node ((key, insertWith f ks new child):other)
+    where   ((key, child):other) = processChildren k children []
+insertWith f (k:ks) new (ValueNode old children) = ValueNode old ((key, insertWith f ks new child):other)
+    where   ((key, child):other) = processChildren k children []
 
 processChildren :: (Ord k) => k -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
 processChildren k [] acc = (k, Node []):acc
 processChildren k ((key, node):children) acc
     | k == key = (key, node):(children ++ acc)
     | otherwise = processChildren k children ((key, node):acc)
-
---_______________________________________________________________________________________________________________________________
 
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
