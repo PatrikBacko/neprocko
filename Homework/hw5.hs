@@ -1,4 +1,5 @@
 import Data.Maybe (isNothing)
+
 -- 5. úloha
 --
 -- 1) Definujte datový typ 'Trie k v' reprezentující trii, kde klíče (řetězce)
@@ -31,23 +32,44 @@ insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
 insertWith f [] new (Node children) = ValueNode new children
 insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
-insertWith f (k:ks) new (Node children) = Node ((key, insertWith f ks new child):other)
-    where   ((key, child):other) = processChildren k children []
+insertWith f (k:ks) new (Node children)
+    | hasChild k children = Node (map (processChild (insertWith f ks new) k) children)
+    | otherwise = Node ((k, insertWith f ks new (Node [])):children)
 
-insertWith f (k:ks) new (ValueNode old children) = ValueNode old ((key, insertWith f ks new child):other)
-    where   ((key, child):other) = processChildren k children []
+insertWith f (k:ks) new (ValueNode old children)
+    | hasChild k children = ValueNode old (map (processChild (insertWith f ks new) k) children)
+    | otherwise = ValueNode old ((k, insertWith f ks new (Node [])):children)
 
-processChildren :: (Ord k) => k -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
-processChildren k [] acc = (k, Node []):acc
-processChildren k ((key, node):children) acc
-    | k == key = (key, node):(children ++ acc)
-    | otherwise = processChildren k children ((key, node):acc)
+hasChild :: (Ord k) => k -> [(k, Trie k v)] -> Bool
+hasChild _ [] = False 
+hasChild k ((key, node):children)
+    | k == key = True
+    | otherwise = hasChild k children
+
+processChild :: (Ord k) => (v -> v) -> k -> (k, v) -> (k, v)
+processChild f k (key, node)
+    | k == key = (key, f node)
+    | otherwise = (key, node)
 
 
--- processChild :: Ord k => (v -> v -> v) -> [k] -> v -> (k, Trie k v) -> Trie k v
--- processChild f (k:ks) new (key, node)
---     | k == key = insertWith f ks new node
---     | otherwise = node
+-- ****** 2. spôsob ****** 
+
+-- insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
+-- insertWith f [] new (Node children) = ValueNode new children
+-- insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
+
+-- insertWith f (k:ks) new (Node children) = Node ((key, insertWith f ks new child):other)
+--     where   ((key, child):other) = processChildren k children []
+
+-- insertWith f (k:ks) new (ValueNode old children) = ValueNode old ((key, insertWith f ks new child):other)
+--     where   ((key, child):other) = processChildren k children []
+
+-- processChildren :: (Ord k) => k -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
+-- processChildren k [] acc = (k, Node []):acc
+-- processChildren k ((key, node):children) acc
+--     | k == key = (key, node):(children ++ acc)
+--     | otherwise = processChildren k children ((key, node):acc)
+
 
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
@@ -101,7 +123,7 @@ member k t
 -- Funkce 'fromList' není nutná, ale může se vám hodit pro testování.
 
 fromList :: (Ord k) => [([k], v)] -> Trie k v
-fromList = undefined
+fromList = foldr (\(k, v) t -> insert k v t) empty
 
 -- BONUS) Implementujte funkci
 
@@ -111,10 +133,22 @@ delete ks t
     | otherwise = t
 
 delete' :: (Ord k) => [k] -> Trie k v -> Trie k v
-delete' ks t = undefined
+delete' [] (ValueNode _ children) = Node children
+delete' (k:ks) (Node children) = Node (processChildren (k:ks) children [])
+delete' (k:ks) (ValueNode value children) = ValueNode value (processChildren (k:ks) children [])
 
-wasDeleted :: (Ord k) => [k] -> Trie k v -> bool 
-wasDeleted = undefined
+processChildren :: (Ord k) => [k] -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
+processChildren [k] ((key, ValueNode value []):children) acc
+    | k == key = reverse acc ++ children
+    | otherwise = processChildren [k] children ((key, ValueNode value []):acc)
+processChildren (k:ks) ((key, ValueNode value rest):children) acc
+    | k == key = reverse acc ++ (key, delete' ks (ValueNode value rest)):children
+    | otherwise = processChildren (k:ks) children ((key, ValueNode value rest):acc)
+processChildren (k:ks) ((key, Node rest):children) acc
+    | k == key = reverse acc ++ (key, delete' ks (Node rest)):children
+    | otherwise = processChildren (k:ks) children ((key, Node rest):acc)
+
+--reverse acc nemusíme použiť pokiaľ nám nezáleží na poradí kľúčov, ale kvôli debugovaniu som si to implementoval, aby som mohol porovnávať s fromList
 
 -- 'delete ks t' smaže klíč 'ks' (a odpovídající hodnotu) z trie 't', pokud
 -- klíč 'ks' není v trii obsažený, 'delete' vrátí původní trii.
