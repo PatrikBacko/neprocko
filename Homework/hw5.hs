@@ -31,28 +31,21 @@ insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
 insertWith f [] new (Node children) = ValueNode new children
 insertWith f [] new (ValueNode old children) = ValueNode (f new old) children
 
-insertWith f (k:ks) new (Node children)
-    |checkChild k children = Node (split f (k:ks) new children)
-    |otherwise = Node ((k, insertWith f ks new (Node [])):children)
+insertWith f (k:ks) new (Node children) = Node new_children
+    where   new_children = (key, insertWith f ks new child):other
+            ((key, child):other) = processChildren k children []
 
-insertWith f (k:ks) new (ValueNode old children)
-    |checkChild k children = ValueNode old (split f (k:ks) new children)
-    |otherwise = ValueNode old ((k, insertWith f ks new (Node [])):children)
+insertWith f (k:ks) new (ValueNode old children) = ValueNode old new_children
+    where   new_children = (key, insertWith f ks new child):other
+            ((key, child):other) = processChildren k children []
 
-checkChild :: (Eq k) => k -> [(k, Trie k v)] -> Bool
-checkChild _ [] = False
-checkChild k ((key, _):children)
-    | k == key = True
-    | otherwise = checkChild k children
+processChildren :: (Ord k) => k -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
+processChildren k [] acc = (k, Node []):acc
+processChildren k ((key, node):children) acc
+    | k == key = (key, node):(children ++ acc)
+    | otherwise = processChildren k children ((key, node):acc)
 
-split :: (Ord k) => (v -> v -> v) -> [k] -> v -> [(k, Trie k v)] -> [(k, Trie k v)]
-split f (k:ks) new [(key, ValueNode old children)]
-    |k == key = [(key, insertWith f ks new (ValueNode old children))]
-    |otherwise = [(key, ValueNode old children)]
-split f (k:ks) new [(key, Node children)]
-    |k == key = [(key, insertWith f ks new (Node children))]
-    |otherwise = [(key, Node children)]
-split f ks new (child:children) = split f ks new [child] ++ split f ks new children
+--_______________________________________________________________________________________________________________________________
 
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
