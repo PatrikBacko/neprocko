@@ -148,6 +148,7 @@ processChildren (k:ks) ((key, Node rest):children) acc
     | k == key = reverse acc ++ (key, delete' ks (Node rest)):children
     | otherwise = processChildren (k:ks) children ((key, Node rest):acc)
 
+--nefunguje, treba ešte nejaký cleanup alebo niečo podobné
 --reverse acc nemusíme použiť pokiaľ nám nezáleží na poradí kľúčov, ale kvôli debugovaniu som si to implementoval, aby som mohol porovnávať s fromList
 
 -- 'delete ks t' smaže klíč 'ks' (a odpovídající hodnotu) z trie 't', pokud
