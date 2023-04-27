@@ -52,7 +52,7 @@ processChild f k (key, node)
     | otherwise = (key, node)
 
 
--- ****** 2. spôsob ****** 
+------------- ****** 2. spôsob ****** (nezachováva poradie kľúčov)
 
 -- insertWith :: (Ord k) => (v -> v -> v) -> [k] -> v -> Trie k v -> Trie k v
 -- insertWith f [] new (Node children) = ValueNode new children
@@ -70,6 +70,7 @@ processChild f k (key, node)
 --     | k == key = (key, node):(children ++ acc)
 --     | otherwise = processChildren k children ((key, node):acc)
 
+------------------------------------------------------------------------------------------
 
 -- 'insertWith f ks new t' vloží klíč 'ks' s hodnotou 'new' do trie 't'. Pokud
 -- trie již klíč 'ks' (s hodnotou 'old') obsahuje, původní hodnota je nahrazena
@@ -139,13 +140,13 @@ delete' (k:ks) (ValueNode value children) = ValueNode value (cleanUp (processChi
 
 processChildren :: (Ord k) => [k] -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
 processChildren [k] ((key, ValueNode value []):children) acc
-    | k == key = reverse acc ++ children
+    | k == key = acc ++ children
     | otherwise = processChildren [k] children ((key, ValueNode value []):acc)
 processChildren (k:ks) ((key, ValueNode value rest):children) acc
-    | k == key = reverse acc ++ (key, delete' ks (ValueNode value rest)):children
+    | k == key = acc ++ (key, delete' ks (ValueNode value rest)):children
     | otherwise = processChildren (k:ks) children ((key, ValueNode value rest):acc)
 processChildren (k:ks) ((key, Node rest):children) acc
-    | k == key = reverse acc ++ (key, delete' ks (Node rest)):children
+    | k == key = acc ++ (key, delete' ks (Node rest)):children
     | otherwise = processChildren (k:ks) children ((key, Node rest):acc)
 
 cleanUp :: (Ord k) => [(k, Trie k v)] -> [(k, Trie k v)]
@@ -154,7 +155,7 @@ cleanUp ((key, Node []):children) = cleanUp children
 cleanUp ((key, Node rest):children) = (key, Node rest):(cleanUp children)
 cleanUp ((key, ValueNode value rest):children) = (key, ValueNode value rest):(cleanUp children)
 
---reverse acc nemusíme použiť pokiaľ nám nezáleží na poradí kľúčov, ale kvôli debugovaniu som si to implementoval, aby som mohol porovnávať s fromList
+--nezachováva poradie klúčov
 
 -- 'delete ks t' smaže klíč 'ks' (a odpovídající hodnotu) z trie 't', pokud
 -- klíč 'ks' není v trii obsažený, 'delete' vrátí původní trii.
