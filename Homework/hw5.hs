@@ -134,8 +134,8 @@ delete ks t
 
 delete' :: (Ord k) => [k] -> Trie k v -> Trie k v
 delete' [] (ValueNode _ children) = Node children
-delete' (k:ks) (Node children) = Node (processChildren (k:ks) children [])
-delete' (k:ks) (ValueNode value children) = ValueNode value (processChildren (k:ks) children [])
+delete' (k:ks) (Node children) = Node (cleaup (processChildren (k:ks) children []))
+delete' (k:ks) (ValueNode value children) = ValueNode value (cleaup (processChildren (k:ks) children []))
 
 processChildren :: (Ord k) => [k] -> [(k, Trie k v)] -> [(k, Trie k v)] -> [(k, Trie k v)]
 processChildren [k] ((key, ValueNode value []):children) acc
@@ -148,7 +148,12 @@ processChildren (k:ks) ((key, Node rest):children) acc
     | k == key = reverse acc ++ (key, delete' ks (Node rest)):children
     | otherwise = processChildren (k:ks) children ((key, Node rest):acc)
 
---nefunguje, treba ešte nejaký cleanup alebo niečo podobné
+cleaup :: (Ord k) => [(k, Trie k v)] -> [(k, Trie k v)]
+cleaup [] = []
+cleaup ((key, Node []):children) = cleaup children
+cleaup ((key, Node rest):children) = (key, Node rest):(cleaup children)
+cleaup ((key, ValueNode value rest):children) = (key, ValueNode value rest):(cleaup children)
+
 --reverse acc nemusíme použiť pokiaľ nám nezáleží na poradí kľúčov, ale kvôli debugovaniu som si to implementoval, aby som mohol porovnávať s fromList
 
 -- 'delete ks t' smaže klíč 'ks' (a odpovídající hodnotu) z trie 't', pokud
