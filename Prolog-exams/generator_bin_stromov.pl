@@ -13,8 +13,8 @@ maptree(P, b(T1, V, T2)) :-
 size(b(T1, _, T2), N, H1) :-
     N > 0,
     H1 > -1,
-    N > H1,
     NN is N-1,
+    NN >= H1,
     between(0, NN, V),
     H2 is H1 - 1,
     V1 is NN - V,
