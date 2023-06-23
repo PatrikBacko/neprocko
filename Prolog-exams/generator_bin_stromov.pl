@@ -1,3 +1,5 @@
+%%% NOT YET DONE %%%
+
 % maptree(+P, ?T)
 
 maptree(_, nil) :- !.
@@ -12,7 +14,7 @@ maptree(P, b(T1, V, T2)) :-
 
 size(nil, 0, _):- !.
 % size(b(nil, _, nil), 1, 1):- !.
-
+%
 
 size(b(T1, _, T2), N, H1) :-
     N > 0,
