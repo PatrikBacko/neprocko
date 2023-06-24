@@ -27,6 +27,7 @@ instance Pole FPole where
         | n > i = Node (i, x) l (update r n y)
 
 instance Foldable FPole where
+    foldr :: (a -> b -> b) -> b -> FPole a -> b
     foldr f z Nill = z
     foldr f z (Node (_, x) l r) = foldr f (f x (foldr f z l)) r
 
