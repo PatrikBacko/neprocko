@@ -29,4 +29,5 @@ takeTree = take2 0
 testTree :: Tree Integer
 testTree = Node 1 [Node 2 [Node 3 [], Node 4 [], Node 5 [],  Node 5 []], Node 6 [Node 7 []]]
 
--- TODO f), g)
+infinitTree :: a -> Tree a
+infinitTree a = Node a [infinitTree a]
