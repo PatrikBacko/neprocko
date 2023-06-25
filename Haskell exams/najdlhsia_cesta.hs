@@ -19,20 +19,19 @@ nc g u v
     | result == [] = Nothing
     | otherwise = Just (reverse $ fromJust $ lookup m result, m)
         where 
-            result = map (\(a,n) -> (n,a)) (findroutes g u v [] 0)
+            result = map (\(a,n) -> (n,a)) (findRoutes g u v [] 0)
             m = maximum (map fst result)
 
-findroutes :: (Num n, Eq a) => [(a, [(a, n)])] -> a -> a -> [a] -> n -> [([a], n)]
-findroutes g u v c l = concatMap (route gNew v (u:c) l) ns
+findRoutes :: (Num n, Eq a) => [(a, [(a, n)])] -> a -> a -> [a] -> n -> [([a], n)]
+findRoutes g u v c l = concatMap (fRoute gNew v (u:c) l) ns
     where 
         ns = findNeighbours g u
         gNew = filter (\(a,b) -> a /= u) g 
 
+        fRoute g v c l (u,i) 
+            | v == u = [(u:c, l+i)]
+            | otherwise = findRoutes g u v c (l+i)
 
-route :: (Num n, Eq a) => [(a, [(a, n)])] -> a -> [a] -> n -> (a, n) -> [([a], n)]
-route g v c l (u,i) 
-    | v == u = [(u:c, l+i)]
-    | otherwise = findroutes g u v c (l+i)
 
 findNeighbours :: Eq a => [(a, [b])] -> a -> [b]
 findNeighbours g u
