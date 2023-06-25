@@ -1,9 +1,13 @@
 import Data.Maybe
 
+--a)
 type Graf_ = [(String , [(String, Int)])]
+
+-- b)
 type Graf a b = [(a , [(a, b)])]
 
 
+-- a), c)
 g :: Graf String Int
 g = [   ("a", [("b",1), ("c", 1), ("f", 3)]),
         ("b", [("d", 2)]),
