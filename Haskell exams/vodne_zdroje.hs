@@ -6,10 +6,10 @@ type Mapa a = [((a, a), [(a, a)])]
 -- a)
 zdroje :: Ord a => Mapa a -> [((a, a), (a, a))]
 zdroje [] = []
-zdroje ((z, zs):rs) = (pripojZdroj z zs) ++ (zdroje rs)
+zdroje rs = concatMap pripojZdroj rs
     where 
-        pripojZdroj _ [] = []
-        pripojZdroj (x, y) zs = [((x, y), n)]
+        pripojZdroj (_, []) = []
+        pripojZdroj ((x, y), zs) = [((x, y), n)]
             where 
                 n = head $ filter (\(a,b) -> (a <= x) && (b <= y)) zs
 
